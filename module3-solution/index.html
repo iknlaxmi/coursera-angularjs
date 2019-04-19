@@ -20,8 +20,9 @@
     </div>
 
     <!-- found-items should be implemented as a component -->
-    <!-- ng-if="menu.found.length!=0"  -->
-    <found-items found-items="menu.found" on-remove="menu.removeItem(index)" ng-if="menu.empty==false"></found-items>
+    <!-- ng-if="menu.found.length!=0"  ng-if="menu.empty==false"-->
+    <found-items found='menu.found' on-remove='menu.remove(index)' empty='menu.empty'></found-items>
+
   </div>
 
 </body>

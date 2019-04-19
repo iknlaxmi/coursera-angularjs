@@ -13,15 +13,15 @@ function FoundItemsDirective(){
     restrict: 'E',
   templateUrl: 'foundItems.html',
   scope: {
-    foundItems: '<',
+    found: '<',
     // myTitle: '@title',
     // badRemove: '=',
-    onRemove: '&'
-    //isEmpty: '<'
-  }
-  // controller: NarrowItDownController,
-  // controllerAs: 'menu',
-  // bindToController: true
+    onRemove: '&',
+      empty: '<'
+  },
+  controller: NarrowItDownController,
+  controllerAs: 'menu',
+  bindToController: true
 };
 
 return ddo;
@@ -33,6 +33,7 @@ NarrowItDownController.$inject = ['MenuSearchService'];
 function NarrowItDownController(MenuSearchService){
   var menu = this;
 menu.searchTerm = '';
+menu.empty ='';
 //   var promise = MenuSearchService.getMatchedMenuItems($scope.item);
 //   promise.then(function (response) {
 //   menu.categories = response.data;
@@ -42,10 +43,11 @@ menu.searchTerm = '';
 // });
 menu.narrow = function(searchTerm) {
         if(searchTerm == ''){
-          menu.empty = true;
+          menu.empty = "Nothing Found";
+          menu.found =[];
           console.log("menu.empty",  menu.empty);
         }else{
-          menu.empty = false;
+          menu.empty = "";
           console.log("menu.empty",  menu.empty);
            MenuSearchService.getMatchedMenuItems(searchTerm)
                .then(function (response) {
@@ -62,13 +64,14 @@ menu.narrow = function(searchTerm) {
 
 
 
-menu.removeItem = function (itemIndex) {
+menu.remove = function (itemIndex) {
    // console.log("'this' is: ", this);
    // this.lastRemoved = "Last item removed was " + this.items[itemIndex].name;
-   //MenuSearchService.removeItem(itemIndex);
-   menu.found.splice(itemIndex, 1);
+   console.log("itemIndex",itemIndex);
+  MenuSearchService.removeItem(itemIndex);
+   // menu.found.splice(itemIndex, 1);
    // this.title = origTitle + " (" + list.items.length + " items )";
- };
+ }
 
 }
 
@@ -76,7 +79,7 @@ menu.removeItem = function (itemIndex) {
 MenuSearchService.$inject = ['$http', 'ApiBasePath'];
 function MenuSearchService($http, ApiBasePath) {
   var service = this;
-
+  var foundItems = [];
   service.getMatchedMenuItems = function (searchTerm) {
     return  $http({
       method: "GET",
@@ -84,7 +87,7 @@ function MenuSearchService($http, ApiBasePath) {
       .then(function(response){
 
         var completeMenu = response.data.menu_items;
-        var foundItems = [];
+
 
         //Find matching menu_items
         if(searchTerm.length == 0){
@@ -111,7 +114,9 @@ function MenuSearchService($http, ApiBasePath) {
 
 
   service.removeItem = function (itemIndex) {
-  items.splice(itemIndex, 1);
+    console.log("itemIndex",itemIndex);
+  foundItems.splice(itemIndex, 1);
+  // return foundItems;
 };
 
 }
