@@ -52,6 +52,11 @@ menu.narrow = function(searchTerm) {
            MenuSearchService.getMatchedMenuItems(searchTerm)
                .then(function (response) {
                    menu.found = response;
+                   if(menu.found.length ==0){
+                     menu.empty = "Nothing Found";
+                     console.log("NOt MATCHING");
+                   }
+
                    menu.title = (menu.found.length+" item(s) found");
                    // menu.filter = searchTerm;
                    console.log("items",menu.found[1].description);
@@ -93,6 +98,7 @@ function MenuSearchService($http, ApiBasePath) {
         if(searchTerm.length == 0){
           completeMenu = [];
         }else{
+          foundItems = [];
           for (var i = 0; i < completeMenu.length; i++) {
                    var str = completeMenu[i].description;
 
